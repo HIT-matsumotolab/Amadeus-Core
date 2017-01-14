@@ -6,7 +6,7 @@
 
 See [https://linuxcontainers.org/ja/lxd/getting-started-cli/](https://linuxcontainers.org/ja/lxd/getting-started-cli/)
 
-"""
+```
 sudo apt install lxd
 newgrp lxd
 sudo lxd init
@@ -14,7 +14,7 @@ lxc launch images:debian/jessie jessie2 -c security.privileged=true
 lxc exec jessie2 -- /bin/bash
 apt update
 apt install clang gcc build-essential
-"""
+```
 
 # Launch Amadeus Core
 
