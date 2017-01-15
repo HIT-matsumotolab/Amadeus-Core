@@ -20,7 +20,11 @@ apt install clang gcc build-essential
 
 On 127.0.0.1:8080
 ```
-./server.go
+./server
+```
+or
+```
+go run server.go
 ```
 
 # API
@@ -75,3 +79,8 @@ Content-Length: 235
 }
 ```
 
+# Test
+
+```
+go test -v ./
+```
