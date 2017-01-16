@@ -47,7 +47,6 @@ go run server.go
     - Current Support : gcc, clang
 - Stdin : Stdin Text. Empty is also OK.
 - Stdout : Stdout. Empty is also OK.
-- Stderr : Stderr. Empty is also OK.
 - Status_code : Status Code. Empty is also OK.
 
 ### Example
@@ -66,7 +65,6 @@ Content-Length: 204
   "Language": "clang",
   "Stdin": "",
   "Stdout": "HELLO\n",
-  "Stderr": "",
   "Status_code": "0"
 }
 ```
@@ -85,7 +83,6 @@ Content-Length: 235
   "Language": "clang",
   "Stdin": "10\n",
   "Stdout": "20\n",
-  "Stderr": "",
   "Status_code": "0"
 }
 ```
