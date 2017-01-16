@@ -1,5 +1,8 @@
 # Amadeus Core (Go implementation)
 
+Amadeus is Online Compiler on Hiroshima Institute of Technology.
+This repository is an experimental Amadeus Go implementation.
+
 ---
 
 # Setup

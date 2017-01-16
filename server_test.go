@@ -27,7 +27,6 @@ func TestCompilerRequest(t *testing.T) {
 			code.Language = "clang"
 			code.Stdin = ""
 			code.Stdout = ""
-			code.Stderr = ""
 			code.Status_code = ""
 			w.WriteJson(&code)
 		}),
