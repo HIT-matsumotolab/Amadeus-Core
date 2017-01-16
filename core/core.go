@@ -34,8 +34,10 @@ func ContainerExec(name string, cmd []string, stdin_text string) string {
 
 func Compile(name string, language string, stdin_text string) map[string]string {
 	rescueStdout := os.Stdout
+	rescueStderr := os.Stderr
 	r, w, _ := os.Pipe()
 	os.Stdout = w
+	os.Stderr = w
 
 	// Compile
 	var status_code string
@@ -51,6 +53,7 @@ func Compile(name string, language string, stdin_text string) map[string]string 
 	w.Close()
 	out, _ := ioutil.ReadAll(r)
 	os.Stdout = rescueStdout
+	os.Stderr = rescueStderr
 	//fmt.Printf("Captured: %s", out)
 	return map[string]string{"stdout": string(out), "status_code": status_code}
 }

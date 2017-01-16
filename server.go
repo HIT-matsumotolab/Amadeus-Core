@@ -54,7 +54,6 @@ type PostCode struct {
 	Language    string
 	Stdin       string
 	Stdout      string
-	Stderr      string
 	Status_code string
 }
 
