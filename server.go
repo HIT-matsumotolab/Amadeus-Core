@@ -3,13 +3,33 @@ package main
 import (
 	"log"
 	"net/http"
+	"strconv"
 	"sync"
 
 	"./core"
 	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/spf13/viper"
 )
 
+var bind = "127.0.0.1"
+var port = 8080
+var name = "jessie2"
+
+func Init() {
+	viper.SetConfigName("config")
+	viper.AddConfigPath("config/")
+	viper.SetConfigType("toml")
+	err := viper.ReadInConfig()
+	if err != nil {
+		log.Panic("[-] Failed Config Load : %s", err)
+	}
+	bind = viper.GetString("development.server")
+	port = viper.GetInt("development.port")
+	name = viper.GetString("development.lxcname")
+}
+
 func main() {
+	Init()
 	api := rest.NewApi()
 	api.Use(rest.DefaultDevStack...)
 	router, err := rest.MakeRouter(
@@ -21,7 +41,7 @@ func main() {
 		log.Fatal(err)
 	}
 	api.SetApp(router)
-	log.Fatal(http.ListenAndServe(":8080", api.MakeHandler()))
+	log.Fatal(http.ListenAndServe(bind+":"+strconv.Itoa(port), api.MakeHandler()))
 }
 
 type Compiler struct {
@@ -77,13 +97,13 @@ func Compile(w rest.ResponseWriter, r *rest.Request) {
 	}
 
 	// Code Push to Container
-	err = core.CodePush(code.Code, code.Language)
+	err = core.CodePush(name, code.Code, code.Language)
 	if err != nil {
 		rest.Error(w, "Failed push code", 400)
 		return
 	}
 	// Compile
-	result := core.Compile(code.Language, code.Stdin)
+	result := core.Compile(name, code.Language, code.Stdin)
 	code.Stdout = result["stdout"]
 	code.Status_code = result["status_code"]
 

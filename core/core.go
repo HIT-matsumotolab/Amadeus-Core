@@ -32,7 +32,7 @@ func ContainerExec(name string, cmd []string, stdin_text string) string {
 	return strconv.Itoa(status_code)
 }
 
-func Compile(language string, stdin_text string) map[string]string {
+func Compile(name string, language string, stdin_text string) map[string]string {
 	rescueStdout := os.Stdout
 	r, w, _ := os.Pipe()
 	os.Stdout = w
@@ -44,7 +44,7 @@ func Compile(language string, stdin_text string) map[string]string {
 		status_code = ContainerExec("jessie2", cmd, "")
 		if status_code == "0" {
 			cmd := []string{"/tmp/a.out"}
-			status_code = ContainerExec("jessie2", cmd, stdin_text)
+			status_code = ContainerExec(name, cmd, stdin_text)
 		}
 	}
 
@@ -55,7 +55,7 @@ func Compile(language string, stdin_text string) map[string]string {
 	return map[string]string{"stdout": string(out), "status_code": status_code}
 }
 
-func CodePush(code string, extension string) error {
+func CodePush(name string, code string, extension string) error {
 	client, err := lxd.NewClient(&lxd.DefaultConfig, "local")
 	if err != nil {
 		return err
@@ -63,6 +63,6 @@ func CodePush(code string, extension string) error {
 
 	extensions := map[string]string{"clang": ".c", "gcc": ".c", "python": ".py"}
 	f := bytes.NewReader([]byte(code))
-	err = client.PushFile("jessie2", "/tmp/code"+extensions[extension], -1, -1, "", f)
+	err = client.PushFile(name, "/tmp/code"+extensions[extension], -1, -1, "", f)
 	return err
 }

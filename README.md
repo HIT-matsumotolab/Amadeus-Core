@@ -16,6 +16,17 @@ apt update
 apt install clang gcc build-essential
 ```
 
+# Config
+
+Edit `config/config.toml`.
+
+```
+[development]
+bind = "127.0.0.1"
+port = 8080
+lxcname = "jessie2" # Container Name
+```
+
 # Launch Amadeus Core
 
 On 127.0.0.1:8080
@@ -42,7 +53,7 @@ go run server.go
 ### Example
 
 ```
-curl -i -H 'Content-Type: application/json' -d @simple_stdout.json localhost:8080/api/compiler/
+curl -i -H 'Content-Type: application/json' -d @sample/simple_stdout.json localhost:8080/api/compiler/
 
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -61,7 +72,7 @@ Content-Length: 204
 ```
 
 ```
-curl -i -H 'Content-Type: application/json' -d @simple_stdout.json localhost:8080/api/compiler/
+curl -i -H 'Content-Type: application/json' -d @sample/simple_stdout.json localhost:8080/api/compiler/
 
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
