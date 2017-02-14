@@ -13,8 +13,8 @@ See [https://linuxcontainers.org/ja/lxd/getting-started-cli/](https://linuxconta
 sudo apt install lxd
 newgrp lxd
 sudo lxd init
-lxc launch images:debian/jessie jessie2 -c security.privileged=true
-lxc exec jessie2 -- /bin/bash
+lxc launch images:debian/jessie admin
+lxc exec admin -- /bin/bash
 apt update
 apt install clang gcc build-essential
 ```
@@ -27,7 +27,7 @@ Edit `config/config.toml`.
 [development]
 bind = "127.0.0.1"
 port = 8080
-lxcname = "jessie2" # Container Name
+lxcname = "admin" # Container Name
 ```
 
 # Launch Amadeus Core
@@ -50,7 +50,7 @@ go run server.go
     - Current Support : gcc, clang
 - Stdin : Stdin Text. Empty is also OK.
 - Stdout : Stdout. Empty is also OK.
-- Status_code : Status Code. Empty is also OK.
+- Stderr : Stderr. Empty is also OK.
 
 ### Example
 
@@ -68,7 +68,7 @@ Content-Length: 204
   "Language": "clang",
   "Stdin": "",
   "Stdout": "HELLO\n",
-  "Status_code": "0"
+  "Stderr": "0"
 }
 ```
 
@@ -86,7 +86,7 @@ Content-Length: 235
   "Language": "clang",
   "Stdin": "10\n",
   "Stdout": "20\n",
-  "Status_code": "0"
+  "Stderr": "0"
 }
 ```
 
