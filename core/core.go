@@ -2,60 +2,34 @@ package core
 
 import (
 	"bytes"
-	"fmt"
-	"io"
-	"io/ioutil"
-	"os"
-	"strconv"
 
 	"github.com/lxc/lxd"
+	"github.com/mrtc0/lxdexec"
 )
 
-func ContainerExec(name string, cmd []string, stdin_text string) string {
-	client, err := lxd.NewClient(&lxd.DefaultConfig, "local")
-	if err != nil {
-		fmt.Println(err)
-		return "Connect Error: "
-	}
-	// Exec
-	env := map[string]string{}
-	stdout := os.Stdout
-	stderr := os.Stderr
-
-	rescueStdin := os.Stdin
-	r, w, _ := os.Pipe()
-	os.Stdin = w
-	io.WriteString(os.Stdin, stdin_text)
-	status_code, _ := client.Exec(name, cmd, env, r, stdout, stderr, nil, 0, 0)
-	w.Close()
-	os.Stdin = rescueStdin
-	return strconv.Itoa(status_code)
-}
-
 func Compile(name string, language string, stdin_text string) map[string]string {
-	rescueStdout := os.Stdout
-	rescueStderr := os.Stderr
-	r, w, _ := os.Pipe()
-	os.Stdout = w
-	os.Stderr = w
-
-	// Compile
-	var status_code string
+	var stdout string
+	var stderr string
 	if language == "clang" {
-		cmd := []string{"gcc", "-o", "/tmp/a.out", "/tmp/code.c"}
-		status_code = ContainerExec("jessie2", cmd, "")
-		if status_code == "0" {
-			cmd := []string{"/tmp/a.out"}
-			status_code = ContainerExec(name, cmd, stdin_text)
+		cmd := []string{"clang", "-o", "/tmp/a.out", "/tmp/code.c"}
+		_, uuid := lxdexec.ContainerExec(name, cmd)
+		lxdexec.Wait(uuid)
+		_, stdout, stderr = lxdexec.ContainerGetStd(name, uuid)
+
+		// Run ELF
+		if stderr == "" {
+			var cmd []string
+			if stdin_text == "" {
+				cmd = []string{"/tmp/a.out"}
+			} else {
+				cmd = []string{"bash", "-c", "echo -e '" + stdin_text + "' | /tmp/a.out"}
+			}
+			_, uuid := lxdexec.ContainerExec(name, cmd)
+			lxdexec.Wait(uuid)
+			_, stdout, stderr = lxdexec.ContainerGetStd(name, uuid)
 		}
 	}
-
-	w.Close()
-	out, _ := ioutil.ReadAll(r)
-	os.Stdout = rescueStdout
-	os.Stderr = rescueStderr
-	//fmt.Printf("Captured: %s", out)
-	return map[string]string{"stdout": string(out), "status_code": status_code}
+	return map[string]string{"stdout": stdout, "stderr": stderr}
 }
 
 func CodePush(name string, code string, extension string) error {

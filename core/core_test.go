@@ -12,13 +12,6 @@ func TestContainerPushFile(t *testing.T) {
 	}
 }
 
-func TestContainerExec(t *testing.T) {
-	retcode := ContainerExec("jessie2", []string{"id"}, "")
-	if retcode != "0" {
-		t.Error("Return Code is not 0")
-	}
-}
-
 func TestCompile(t *testing.T) {
 	err := CodePush("jessie2", "#include <stdio.h>\nint main() {\n    printf(\"HELLO\\n\");\n    return 0;\n}\n", "clang")
 	if err != nil {

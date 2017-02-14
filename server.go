@@ -50,11 +50,11 @@ type Compiler struct {
 }
 
 type PostCode struct {
-	Code        string
-	Language    string
-	Stdin       string
-	Stdout      string
-	Status_code string
+	Code     string
+	Language string
+	Stdin    string
+	Stdout   string
+	Stderr   string
 }
 
 var store = map[string]*Compiler{}
@@ -104,7 +104,7 @@ func Compile(w rest.ResponseWriter, r *rest.Request) {
 	// Compile
 	result := core.Compile(name, code.Language, code.Stdin)
 	code.Stdout = result["stdout"]
-	code.Status_code = result["status_code"]
+	code.Stderr = result["stderr"]
 
 	lock.Lock()
 	postcode_store[code.Language] = &code
