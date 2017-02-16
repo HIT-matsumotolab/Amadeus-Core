@@ -47,10 +47,10 @@ go run server.go
 
 - Code : Source Code
 - Language : Compile Language
-    - Current Support : gcc, clang
-- Stdin : Stdin Text. Empty is also OK.
-- Stdout : Stdout. Empty is also OK.
-- Stderr : Stderr. Empty is also OK.
+    - Current Support : clang
+- Stdin : Stdin Text
+- Stdout : Stdout
+- Stderr : Stderr
 
 ### Example
 
